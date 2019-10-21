@@ -896,66 +896,772 @@ ValueError: invalid literal for int() with base 6: '123456'
 >>> x.strip(".gorw")                    #移除所有.、 g、o、r、w字元
 'python'
 ```
-#### 6.4.4 isdligit() 、isalpha()、islower()、isupper()
-
+#### 6.4.4 isdigit()、isalpha()、islower()、isupper()和字串相關常數
+```
+>>> x = "123"
+>>> x.isdigit()
+True
+>>> x.isalpha()
+False
+>>> x = "M"
+>>> x.islower()
+False
+>>> x.isupper()
+True
+```
 ### 6.5 從物件轉換成字串
+
+#### 6.5.2 find()、rfind()、index()、rindex()
+```
+>>> x = "Mississippi"
+>>> x.find("ss")
+2
+>>> x.find("zz")
+-1
+```
+```
+>>> x = "Mississippi"
+>>> x.find("ss", 3)
+5
+>>> x.find("ss", 0, 3)
+-1
+```
+```
+>>> x = "Mississippi"
+>>> x.rfind("ss")
+5
+```
+#### 6.5.3 count()
+```
+>>> x = "Mississippi"
+>>> x.count("ss")
+2
+```
+#### 6.5.4 startswith()、endswith()
+```
+>>> x = "Mississippi"
+>>> x.startswith("Miss")
+True
+>>> x.startswith("Mist")
+False
+>>> x.endswith("pi")
+True
+>>> x.endswith("p")
+False
+```
+```
+>>> x.endswith(("i", "u"))
+True
+```
 
 ### 6.6 使用format() method來格式化字串
 
-### 6.7 以 % 算符來格式化字串
+#### 6.6.1 peplace()
+```
+>>> x = "Mississippi"
+>>> x.replace("ss", "+++")
+'Mi+++i+++ippi
+```
+#### 6.6.2 maketrans()、translate()
+```
+>>> x = "~x ^ (y % z)"
+>>> table = x.maketrans("~^()", "!&[]")
+>>> x.translate(table)
+'!x & [y % z]'
+```
+#### 6.6.5 透過list修改字串
+```
+>>> text = "Hello, World"
+>>> wordList = list(text)
+>>> wordList[6:] = []                    
+>>> wordList.reverse()
+>>> text = "".join(wordList)      
+>>> print(text)                          
+,olleH
+```
+### 6.7 以 repr() 和str 將物件轉換成字串表達
+```
+>>> repr([1, 2, 3])
+'[1, 2, 3]'
+>>> x = [1]
+>>> x.append(2)
+>>> x.append([3, 4])
+>>> 'the list x is ' + repr(x)
+'the list x is [1, 2, [3, 4]]'
+```
+### 6.8 以 forMat()method來格式化字串
 
-### 6.8 以 f-strings來格式化字串
-
-### 6.9 bytes物件
-
-### 6.10 使用print() 控制字串輸出
-
+#### 6.8.1 用位置參數、編號參數來替換
+```
+>>> "{0} is the {1} of {2}".format("Ambrosia", "food", "the gods") #1
+'Ambrosia is the food of the gods'
+>>> "{{Ambrosia}} is the {0} of {1}".format("food", "the gods")    #2
+'{Ambrosia} is the food of the gods'
+```
+#### 6.8.2 使用指名參數 (named parameter)
+```
+>>> "{food} is the food of {user}".format(food="Ambrosia", 
+...       user="the gods") 
+'Ambrosia is the food of the gods'
+```
+```
+>>> "{0} is the food of {user[1]}".format("Ambrosia", 
+...          user=["men", "the gods", "others"]) 
+'Ambrosia is the food of the gods'
+```
+#### 6.8.3 格式化設定
+```
+>>> "{0:10} is the food of gods".format("Ambrosia")      
+'Ambrosia   is the food of gods'
+>>> "{0:>10} is the food of gods".format("Ambrosia")        
+'  Ambrosia is the food of gods'
+>>> "{0:&>10} is the food of gods".format("Ambrosia")           
+'&&Ambrosia is the food of gods'
+```
+```
+>>> "{0:{1}} is the food of gods".format("Ambrosia", 10)   
+'Ambrosia   is the food of gods'
+>>> "{food:{width}} is the food of gods".format(food="Ambrosia", width=10)
+'Ambrosia   is the food of gods'
+```
+### 6.9 以 % 算符來格式化字串
+```
+>>> "%s is the %s of %s" % ("Ambrosia", "food", "the gods")
+'Ambrosia is the food ```of the gods'
+```
+```
+>>> "%s is the %s of %s" % ("Nectar", "drink", "gods")
+'Nectar is the drink of gods'
+>>> "%s is the %s of the %s" % ("Brussels Sprouts", "food", 
+...        "foolish")
+'Brussels Sprouts is the food of the foolish'
+```
+```
+>>> x = [1, 2, "three"]
+>>> "The %s contains: %s" % ("list", x)
+"The list contains: [1, 2, 'three']"
+```
+#### 6.9.1 %算符的格式化參數
+```
+>>> "Pi is <%-6.2f>" % 3.14159 # use of the formatting sequence: %–6.2f
+'Pi is <3.14  >'
+```
+#### 6.9.2 %算符的指名參數
+```
+>>> num_dict = {'e': 2.718, 'pi': 3.14159}
+>>> print("%(pi).2f - %(pi).4f - %(e).2f" % num_dict)
+3.14 - 3.1416 - 2.72
+```
+### 6.10 以 f-strings來格式化字串
+```
+>>> value = 42
+>>> message = f"The answer is {value}"
+>>> print(message)
+The answer is 42
+```
+```
+>>> pi = 3.1415
+>>> print(f"pi is {pi:{10}.{2}}")
+pi is        3.1
+```
+### 6.10 bytes物件
+```
+>>> unicode_a_with_acute = '\N{LATIN SMALL LETTER A WITH ACUTE}'
+>>> unicode_a_with_acute
+'á'
+>>> xb = unicode_a_with_acute.encode()    
+>>> xb
+b'\xc3\xa1'                               
+>>> xb += 'A'                              
+Traceback (most recent call last):
+  File "<pyshell#35>", line 1, in <module>
+    xb += 'A'
+TypeError: can't concat str to bytes
+>>> xb.decode()                           
+'á'
+```
 # 第7章 字典
 
 ### 7.1 什麼是字典?
+```
+>>> x = []        
+>>> y = {}        
+```
+```
+>>> y[0] = 'Hello'
+>>> y[1] = 'Goodbye'
+```
+```
+>>> x[0] = 'Hello'
+Traceback (innermost last):
+  File "<stdin>", line 1, in ?
+IndexError: list assignment index out of range
+```
+```
+>>> print(y[0])
+Hello
+>>> y[1] + ", Friend."
+'Goodbye, Friend.'
+```
+```
+>>> y["two"] = 2
+>>> y["pi"] = 3.14
+>>> y["two"] * y["pi"]
+6.28
+```
+```
+>>> english_to_french = {}                    #建立空字典 一定要先建立(不一定是空的)
+>>> english_to_french['red'] = 'rouge'          
+>>> english_to_french['blue'] = 'bleu'
+>>> english_to_french['green'] = 'vert'
+>>> print("red is", english_to_french['red'])   
+red is rouge
+
+```
 
 ### 7.2 其他字典操作
-
+```
+>>> english_to_french = {'red': 'rouge', 'blue': 'bleu', 'green': 'vert'}
+```
+```
+>>> len(english_to_french)
+3
+```
+#### 7.2.1 keys() 、values()和items()method
+```
+>> list(english_to_french.keys())
+['green', 'blue', 'red']
+```
+```
+>>> list(english_to_french.values())
+ ['vert', 'bleu', 'rouge']
+```
+```
+>>> list(english_to_french.items())
+[('green', 'vert'), ('blue', 'bleu'), ('red', 'rouge')]
+```
+### 7.2.2 get()和setdefault()method
+```
+>>> list(english_to_french.items())
+[('green', 'vert'), ('blue', 'bleu'), ('red', 'rouge')]
+>>> del english_to_french['green']
+>>> list(english_to_french.items())
+ [('blue', 'bleu'), ('red', 'rouge')]
+```
+```
+>>> 'red' in english_to_french
+True
+>>> 'orange' in english_to_french
+False
+```
+```
+>>> print(english_to_french.get('blue', 'No translation'))
+bleu
+>>> print(english_to_french.get('chartreuse', 'No translation'))
+No translation
+```
+```
+>>> print(english_to_french.setdefault('chartreuse', 'No translation'))
+No translation
+```
+#### 7.2.3 copy() 和update()method
+```
+>>> x = {0: 'zero', 1: 'one'}
+>>> y = x.copy()
+>>> y
+{0: 'zero', 1: 'one'}
+```
+```
+>>> z = {1: 'One', 2: 'Two'}
+>>> x = {0: 'zero', 1: 'one'}
+>>> x.update(z)
+>>> x
+{0: 'zero', 1: 'One', 2: 'Two'}
+```
 ### 7.3 字數統計
-
-### 7.4 什麼型別可以當作鍵來使用?
-
+```
+>>> sample_string = "To be or not to be"
+>>> occurrences = {}
+>>> for word in sample_string.split():
+...     occurrences[word] = occurrences.get(word, 0) + 1   #1
+...
+>>> for word in occurrences:
+...     print("The word", word, "occurs", occurrences[word], \
+...            "times in the string")
+...
+The word To occurs 1 times in the string
+The word be occurs 2 times in the string
+The word or occurs 1 times in the string
+The word not occurs 1 times in the string
+The word to occurs 1 times in the string
+```
 ### 7.5 稀疏矩陣
+```
+matrix = [[3, 0, -2, 11], [0, 9, 0, 0], [0, 7, 0, 0], [0, 0, 0, -5]]
+```
+```
+matrix = {(0, 0): 3, (0, 2): -2, (0, 3): 11, 
+          (1, 1): 9, (2, 1): 7, (3, 3): -5}
+```
+```
+if (rownum, colnum) in matrix:
+    element = matrix[(rownum, colnum)]
+else:
+    element = 0
+```
 
 ### 7.6 以字典作為快取
-
-### 7.7 字典的效率
-
+```
+def sole(m, n, t):
+    # . . . do some time-consuming calculations . . .
+    return(result)
+```
+```
+sole_cache = {}
+def sole(m, n, t):
+    if (m, n, t) in sole_cache:
+        return sole_cache[(m, n, t)]
+    else:
+        # . . . do some time-consuming calculations . . .
+        sole_cache[(m, n, t)] = result
+        return result
+```
 # 第8章 流程控制
 
-### 8.1 while 迴圈
-
-### 8.2 if-elif-else 判斷式
-
 ### 8.3 for 迴圈
+```
+x = [1.0, 2.0, 3.0]
+for n in x:
+    print(1 / n)
+```
+#### 8.3.1 range()函式
+```
+x = [1, 3, -7, 4, 9, -5, 4]
+for i in range(len(x)):
+    if x[i] < 0:
+        print("Found a negative number at index ", i)
+```
+#### 8.3.2 以range(m,n)控制數列範圍
+```
+>>> list(range(3, 7))           
+[3, 4, 5, 6]
+>>> list(range(2, 10))          
+[2, 3, 4, 5, 6, 7, 8, 9]        
+>>> list(range(5, 3))
+[]
+```
+```
+>>> list(range(0, 10, 2))
+[0, 2, 4, 6, 8]
+>>> list(range(5, 0, -1))
+[5, 4, 3, 2, 1]
+```
+#### 8.3.4 for迴圈與tuple解包多重設定變數
 
+```
+omelist = [(1, 2), (3, 7), (9, 5)]
+result = 0
+for t in somelist:
+    result = result + (t[0] * t[1])
+```
+```
+somelist = [(1, 2), (3, 7), (9, 5)]
+result = 0
+
+for x, y in somelist:
+    result = result + (x * y)
+```
+#### 8.3.5 enumerate()函式
+```
+x = [1, 3, -7, 4, 9, -5, 4]
+for i, n in enumerate(x):                                   
+    if n < 0:                                           
+        print("Found a negative number at index ", i)   
+```
+#### 8.3.6 zip() 函式
+```
+>>> x = [1, 2, 3, 4]
+>>> y = ['a', 'b', 'c']           
+>>> z = zip(x, y)
+>>> list(z)
+[(1, 'a'), (2, 'b'), (3, 'c')]   
+
+```
 ### 8.4 用生成式快速建立新的list與字典
+```
+>>> x = [1, 2, 3, 4]
+>>> x_squared = []
+>>> for item in x:
+...     x_squared.append(item * item)
+... 
+>>> x_squared
+[1, 4, 9, 16]
+```
+#### 8.4.1 生成式
+```
+>>> x = [1, 2, 3, 4]
+>>> x_squared = [item * item for item in x]
+>>> x_squared
+[1, 4, 9, 16]
+```
+```
+>>> x = [1, 2, 3, 4]
+>>> x_squared = [item * item for item in x if item > 2]
 
+>>> x_squared
+[9, 16]
+```
+```
+>>> x = [1, 2, 3, 4]
+>>> x_squared_dict = {item: item * item for item in x}
+>>> x_squared_dict
+{1: 1, 2: 4, 3: 9, 4: 16}
+```
+#### 8.4.2 產生器
+```
+>>> x = [1, 2, 3, 4]
+>>> x_squared = (item * item for item in x)
+>>> x_squared
+<generator object <genexpr> at 0x102176708>
+>>> for square in x_squared:
+...     print(square,)
+...
+1 4 9 16
+```
 ### 8.5 敘述、區塊、和縮排
-
+```
+>>> x = 1; y = 0; z = 0
+>>> if x > 0: y = 1; z = 10
+... else: y = -1
+... 
+>>> print(x, y, z)
+1 1 10
+```
+#### 8.5.1 敘述、區塊、縮排
+```
+>>>
+>>>   x = 1
+File "<stdin>", line 1
+    x = 1
+    ^
+   IndentationError: unexpected indent
+>>>
+```
+```
+>>> x = 1
+>>> if x == 1: 
+...    y = 2
+...    if v > 0:
+...        z = 2
+...        v = 0
+...
+>>> x = 2
+```
+```
+>>> x = 1
+>>> if x == 1:
+           y = 2
+        z = 2
+File "<stdin>", line 3
+       z = 2
+       ^
+    IndentationError: unindent does not match any outer indentation level
+```
+#### 8.5.2 將一行敘述拆成多行
+```
+>>> print('string1', 'string2', 'string3' \
+...    , 'string4', 'string5')
+string1 string2 string3 string4 string5
+>>> x = 100 + 200 + 300 \
+...    + 400 + 500
+>>> x
+1500
+>>> v = [100, 300, 500, 700, 900,
+...    1100, 1300]
+>>> v
+[100, 300, 500, 700, 900, 1100, 1300]
+>>> max(1000, 300, 500,
+...        800, 1200)
+1200
+>>> x = (100 + 200 + 300
+...          + 400 + 500)
+>>> x
+1500
+```
 ### 8.6 布林值與運算式的真假運算
 
-### 8.7 寫一個簡單的程式來分析文字檔
+#### 8.6.2 布林算符與比較算符
+```
+>>> [2] and [3, 4]
+[3, 4]
+>>> [] and 5
+[]
+>>> [2] or [3, 4]
+[2]
+>>> [] or 5
+5
+>>> 
 
+
+>>> x = [0]
+>>> y = [x, 1]
+>>> x is y[0]            
+True
+>>> x = [0]              
+>>> x is y[0]
+False
+>>> x == y[0]
+True
+```
 # 第9章 函式
 
 ### 9.1 基本函式定義
-
+```
+>>> def fact(n): 
+...     """Return the factorial of the given number."""            
+...     r = 1
+...     while n > 0:
+...         r = r * n
+...         n = n - 1
+...     return r                                     
+...
+```
+```
+>>> fact(4)                            
+24                                     
+>>> x = fact(4)                       
+>>> x 
+24
+>>>
+```
 ### 9.2 函式的參數定義與引數傳遞
+```
+>>> def power(x, y):
+...     r = 1
+...     while y > 0:
+...         r = r * x
+...         y = y - 1
+...     return r
+... 
+>>> power(3, 3)
+27
+```
+```
+>>> power(3)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: power() missing 1 required positional argument: 'y'
+>>>
+```
+```
+>>> def power(x, y=2):
+...     r = 1
+...     while y > 0:
+...         r = r * x
+...         y = y - 1
+...     return r
+...
+```
+```
+>>> power(3, 3)
+27
+>>> power(3)
+9
+```
+#### 9.2.2 用參數名稱傳遞引數
+```
+def list_file_info(size=False, create_date=False, mod_date=False, ...):
+    ...get file names...
+    if size:
+        # code to get file sizes goes here
+    if create_date:
+        # code to get create dates goes here
+    # do any other stuff desired
+    
+    return fileinfostructure
+```
+```
+fileinfo = list_file_info(size=True, mod_date=True)
 
+>>> power(2, 3)
+8
+>>> power(3, 2)
+9
+>>> power(y=2, x=3)
+9
+```
+#### 9.2.3 帶有*和**的參數:一個參數接收多出來的引數
+```
+>>> def maximum(*numbers):
+...     if len(numbers) == 0:
+...         return None
+...     else:
+...         maxnum = numbers[0]
+...         for n in numbers[1:]:
+...             if n > maxnum:
+...                 maxnum = n
+...         return maxnum
+...
+```
+```
+>>> maximum(3, 2, 8)
+8
+>>> maximum(1, 5, 9, -2, 2)
+9
+```
+```
+>>> def example_fun(x, y, **other):
+...     print("x: {0}, y: {1}, keys in 'other': {2}".format(x, 
+...           y, list(other.keys())))
+...     other_total = 0
+...     for k in other.keys():
+...         other_total = other_total + other[k]
+...     print("The total of values in 'other' is {0}".format(other_total))
+
+```
 ### 9.3 用可變 （mutable）物件作為引數時要小心
-
+```
+>>> def f(n, list1, list2):
+...    list1.append(3)
+...    list2 = [4, 5, 6]
+...    n = n + 1
+...
+>>> x = 5
+>>> y = [1, 2]
+>>> z = [4, 5]
+>>> f(x, y, z)
+>>> x, y, z
+(5, [1, 2, 3], [4, 5])
+```
 ### 9.4 local、global、nonlocal變數
+```
+def fact(n):
+    """Return the factorial of the given number."""
+    r = 1
+    while n > 0:
+        r = r * n
+        n = n - 1
+    return r
+```
+```
+>>> def fun():
+...     global a
+...     a = 1
+...     b = 2
+...
 
+>>> a = "one"
+>>> b = "two"
+```
+```
+>>> fun()
+>>> a
+1
+>>> b
+'two'
+```
+```
+top level-> g_var: 0 nl_var: 0
+in test-> g_var: 0 nl_var: 2
+in inner_test-> g_var: 1 nl_var: 4
+in test-> g_var: 1 nl_var: 4
+top level-> g_var: 1 nl_var: 0
+```
 ### 9.5 將變數參照到函式
-
+```
+>>> def f_to_kelvin(degrees_f):                     #A
+...     return 273.15 + (degrees_f - 32) * 5 / 9
+...
+>>> def c_to_kelvin(degrees_c):                      #B
+...     return 273.15 + degrees_c
+...
+>>> abs_temperature = f_to_kelvin                    #C
+>>> abs_temperature(32)
+273.15
+>>> abs_temperature = c_to_kelvin                      #D
+>>> abs_temperature(0)
+273.15
+```
+```
+>>> t = {'FtoK': f_to_kelvin, 'CtoK': c_to_kelvin}      #1
+>>> t['FtoK'](32)                                       #A
+273.15
+>>> t['CtoK'](0)                                        #B
+273.15
+```
 ### 9.6 lambda 匿名函式
-
+```
+>>> t2 = {'FtoK': lambda deg_f: 273.15 + (deg_f - 32) * 5 / 9, #1 
+...       'CtoK': lambda deg_c: 273.15 + deg_c}                #1
+>>> t2['FtoK'](32)
+273.15
+```
 ### 9.7 產生器(走訪器)函式
-
+```
+>>> def four():
+...     x = 0                                    #A
+...     while x < 4:
+...         print("in generator, x =", x)
+...         yield x                               #B
+...         x += 1                               #C
+... 
+>>> for i in four():
+...     print(i)
+...
+in generator, x = 0
+0
+in generator, x = 1
+1
+in generator, x = 2
+2
+in generator, x = 3
+3
+```
+```
+>>> 2 in four()
+in generator, x = 0
+in generator, x = 1
+in generator, x = 2
+True
+>>> 5 in four()
+in generator, x = 0
+in generator, x = 1
+in generator, x = 2
+in generator, x = 3
+False
+```
 ### 9.8 修飾器（Decorator）
+```
+>>> def decorate(func):
+...     print("in decorate function, decorating", func.__name__)
+...     def wrapper_func(*args):
+...         print("Executing", func.__name__)
+...         return func(*args)
+...     return wrapper_func
+...
+>>> def myfunction(parameter):
+...     print(parameter)
+...
+>>> myfunction = decorate(myfunction)
+in decorate function, decorating myfunction
+>>> myfunction("hello")
+Executing myfunction
+hello
+```
+```
+>>> def decorate(func):
+...     print("in decorate function, decorating", func.__name__)  #1
+...     def wrapper_func(*args):
+...         print("Executing", func.__name__)
+...         return func(*args)
+...     return wrapper_func                                       
+...
+>>> @decorate                                                     
+... def myfunction(parameter):
+...     print(parameter)
+...
+in decorate function, decorating myfunction                      
+>>> myfunction("hello")
+Executing myfunction
+hello
+```
